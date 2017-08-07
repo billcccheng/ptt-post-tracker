@@ -43,14 +43,13 @@ function showData() {
 function convertToList(data) {
   let div = document.getElementById('mainContent');
   Object.keys(data).sort().forEach(function(key) {
-    div.innerHTML += "<div style='margin:20px'>";
-    div.innerHTML += key.toUpperCase() + ":<br/>";
+    let links = '';
     data[key].map(function(item) {
       let title = item.split(";")[0]
       let link = item.split(";")[1]
-      div.innerHTML += "<li><a href=" + link + " target='_blank'>" + title + "</a></li>";
+      links += "<a href=" + link + " target='_blank'>" + title + "  </a>";
     });
-    div.innerHTML += "</div>";
+    div.innerHTML += "<div class='dropdown'><button class='dropbtn'>" + key.toUpperCase() + "</button><div class='dropdown-content'>" + links + "</div>";
   });
 }
 
