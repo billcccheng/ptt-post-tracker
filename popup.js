@@ -9,7 +9,7 @@ function runPlugin() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  chrome.storage.sync.get(null, function(result) {
+  getLinkData(null, function(result) {
     if(result !== null)
       document.getElementById("delete_all").addEventListener("click", deleteAll);
   });
@@ -21,38 +21,41 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
     let link = request.source[1];
     let board = getBoardName(link);
     saveLink(board, title+";"+link);
+    return;
   }
   showData();
 });
 
 
 function deleteAll(){
-  alert("DELETED");
+  alert("DELETED Everything!");
   let div = document.getElementById('mainContent');
   div.innerHTML = "";
   chrome.storage.sync.clear();
 }
 
 function showData() {
-  chrome.storage.sync.get(null, function(result) {
+  getLinkData(null, function(result) {
     convertToList(result);
   });
 }
 
 function convertToList(data) {
   let div = document.getElementById('mainContent');
-  Object.keys(data).forEach(function(key) {
+  Object.keys(data).sort().forEach(function(key) {
+    div.innerHTML += "<div style='margin:20px'>";
     div.innerHTML += key.toUpperCase() + ":<br/>";
     data[key].map(function(item) {
       let title = item.split(";")[0]
       let link = item.split(";")[1]
       div.innerHTML += "<li><a href=" + link + " target='_blank'>" + title + "</a></li>";
     });
+    div.innerHTML += "</div>";
   });
 }
 
 function saveLink(board, link){
-  chrome.storage.sync.get(board, function(result) {
+  getLinkData(board, function(result) {
     let obj = {};
     let links = !!result[board] ? result[board] : [];
     if(links && !links.includes(link)){
@@ -60,9 +63,10 @@ function saveLink(board, link){
       obj[board] = links;
       chrome.storage.sync.set( obj, function() {
         let message = document.querySelector('#mainContent');
-        message.innerHTML = "SAVED " + link.split(';')[0];
+        message.innerHTML = "<h3 style=color:red>SAVED " + link.split(';')[0] + "</h3><br/>";
       });
     }
+    showData();
   });
 }
 
@@ -75,9 +79,7 @@ function getBoardName(link) {
   return board;
 }
 
-function getLinks(board) {
-  chrome.storage.sync.get(board, function(result) {
-    return result;
-  });
+function getLinkData(board, next) {
+  chrome.storage.sync.get(board, next);
 }
 window.onload = runPlugin();
