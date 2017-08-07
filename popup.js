@@ -10,8 +10,15 @@ function runPlugin() {
 
 document.addEventListener('DOMContentLoaded', function() {
   getLinkData(null, function(result) {
-    if(result !== null)
+    if(result !== null){
       document.getElementById("delete_all").addEventListener("click", deleteAll);
+      console.log(document.getElementsByTagName('button'));
+      Object.keys(result).forEach(function(key) {
+        result[key].map(function(item) {
+          let link = item.split(";")[1];
+        });
+      });
+    }
   });
 });
 
@@ -26,12 +33,17 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
   showData();
 });
 
+function deleteItem(){
+  alert("DELETE");
+}
 
 function deleteAll(){
-  alert("DELETED Everything!");
-  let div = document.getElementById('mainContent');
-  div.innerHTML = "";
-  chrome.storage.sync.clear();
+  if (confirm('Are you sure you want to delete all you savings?')) {
+    alert("DELETED Everything!");
+    let div = document.getElementById('mainContent');
+    div.innerHTML = "";
+    chrome.storage.sync.clear();
+  } 
 }
 
 function showData() {
@@ -47,7 +59,7 @@ function convertToList(data) {
     data[key].map(function(item) {
       let title = item.split(";")[0]
       let link = item.split(";")[1]
-      links += "<a href=" + link + " target='_blank'>" + title + "  </a>";
+      links += "<a href=" + link + " target='_blank'>" + title + "</a><button class='delete' id="+ link +">x</button>";
     });
     div.innerHTML += "<div class='dropdown'><button class='dropbtn'>" + key.toUpperCase() + "</button><div class='dropdown-content'>" + links + "</div>";
   });
@@ -67,6 +79,10 @@ function saveLink(board, link){
     }
     showData();
   });
+}
+
+function updateLink(){
+
 }
 
 function getBoardName(link) {

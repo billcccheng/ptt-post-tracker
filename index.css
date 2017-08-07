@@ -12,9 +12,19 @@ body {
 
 #delete_all {
   margin-top: 10px;
+  padding: 5px;
   color: black;
   background:red;
 }
+
+.delete:hover {
+  background: red;
+}
+
+#delete_all:hover {
+  color: yellow;
+}
+
 a,a:visited,a:hover,a:active{
   -webkit-backface-visibility:hidden;
           backface-visibility:hidden;
@@ -77,6 +87,7 @@ button:active {
   color: #fff;
 }
 
+
 /* Dropdown Button */
 .dropbtn {
     /*background-color: #4CAF50;*/
@@ -107,7 +118,7 @@ button:active {
 /* Links inside the dropdown */
 .dropdown-content a {
     color: black;
-    padding: 12px 16px;
+    padding: 10px 0px 10px;
     display: block;
 }
 
