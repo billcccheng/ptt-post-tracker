@@ -11,21 +11,48 @@ function runPlugin() {
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender) {
-  if (request.action == "getSource") {
-    let link = request.source;
-    console.log(link);
+  if (request.action == "getSource" && request.source !== "No Link Availabe") {
+    let title = request.source[0];
+    let link = request.source[1];
     let board = getBoardName(link);
-    saveBoard(board, link);
+    //chrome.storage.sync.clear();
+    saveLink(board, title+";"+link);
+    //alert(HIHI);
+    //getLinks(board);
+    showData();
   }
+  //showData();
 });
 
-function saveBoard(board, link){
-  chrome.storage.sync.get([board], function(result) {
-    let links = !!result ? [link] : result;
-    links = links.includes(link) ? links : links.unshift(link);
-    chrome.storage.sync.set({ board: links }, function() {
+function showData() {
+  chrome.storage.sync.get(null, function(result) {
+    convertToList(result);
+  });
+}
+
+function convertToList(data) {
+  console.log(data);
+  let div = document.getElementById('mainContent');
+  Object.keys(data).forEach(function(key) {
+    div.innerHTML += key.toUpperCase() + ":<br/>";
+    data[key].map(function(item) {
+      let title = item.split(";")[0]
+      let link = item.split(";")[1]
+      div.innerHTML += "<li><a href=" + link + " target='_blank'>" + title + "</a></li>";
+    });
+  });
+}
+
+function saveLink(board, link){
+  chrome.storage.sync.get(board, function(result) {
+    let obj = {};
+    let links = !!result[board] ? result[board] : [];
+    if(links)
+      links.includes(link) ? links : links.unshift(link);
+    obj[board] = links;
+
+    chrome.storage.sync.set( obj, function() {
       console.log("Link Saved");
-      getLinks(board);
     });
   });
 }
@@ -40,8 +67,8 @@ function getBoardName(link) {
 }
 
 function getLinks(board) {
-  chrome.storage.sync.get([board], function(result) {
-    console.log(result);
+  chrome.storage.sync.get(board, function(result) {
+    return result;
   });
 }
 window.onload = runPlugin();

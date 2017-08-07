@@ -1,7 +1,8 @@
 // @author Rob W <http://stackoverflow.com/users/938089/rob-w>
 chrome.runtime.sendMessage({
   action: "getSource",
-  source: findLink(document)
+  //source: findLink(document)
+  source: findWebLink(document)
 });
 
 function findLink(document) {
@@ -14,4 +15,10 @@ function findLink(document) {
     }
   }
   return targetLink ? targetLink : "No Link Available";
+}
+
+function findWebLink(document) {
+  let title = document.getElementsByClassName("article-meta-value");
+  let links = document.getElementsByClassName("f2")[1].getElementsByTagName("a");
+  return [title[2].innerHTML, links[0].href];
 }
