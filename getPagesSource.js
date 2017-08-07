@@ -18,7 +18,9 @@ function findLink(document) {
 }
 
 function findWebLink(document) {
-  let title = document.getElementsByClassName("article-meta-value");
-  let links = document.getElementsByClassName("f2")[1].getElementsByTagName("a");
-  return [title[2].innerHTML, links[0].href];
+  if(!document.location.href.includes("https://www.ptt.cc"))
+    return "Not a ptt website";
+  let title = document.getElementsByClassName("article-meta-value")[2].innerHTML;
+  let link = document.getElementsByClassName("f2")[1].getElementsByTagName("a")[0].href;
+  return [title, link];
 }

@@ -1,6 +1,4 @@
 function runPlugin() {
-  let message = document.querySelector('#message');
-
   chrome.tabs.executeScript(null, {
     file: "getPagesSource.js"
     }, function() {
@@ -10,19 +8,30 @@ function runPlugin() {
     });
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+  chrome.storage.sync.get(null, function(result) {
+    if(result !== null)
+      document.getElementById("delete_all").addEventListener("click", deleteAll);
+  });
+});
+
 chrome.runtime.onMessage.addListener(function(request, sender) {
-  if (request.action == "getSource" && request.source !== "No Link Availabe") {
+  if (request.action == "getSource" && request.source !== "Not a ptt website") {
     let title = request.source[0];
     let link = request.source[1];
     let board = getBoardName(link);
-    //chrome.storage.sync.clear();
     saveLink(board, title+";"+link);
-    //alert(HIHI);
-    //getLinks(board);
-    showData();
   }
-  //showData();
+  showData();
 });
+
+
+function deleteAll(){
+  alert("DELETED");
+  let div = document.getElementById('mainContent');
+  div.innerHTML = "";
+  chrome.storage.sync.clear();
+}
 
 function showData() {
   chrome.storage.sync.get(null, function(result) {
@@ -31,7 +40,6 @@ function showData() {
 }
 
 function convertToList(data) {
-  console.log(data);
   let div = document.getElementById('mainContent');
   Object.keys(data).forEach(function(key) {
     div.innerHTML += key.toUpperCase() + ":<br/>";
@@ -47,13 +55,14 @@ function saveLink(board, link){
   chrome.storage.sync.get(board, function(result) {
     let obj = {};
     let links = !!result[board] ? result[board] : [];
-    if(links)
-      links.includes(link) ? links : links.unshift(link);
-    obj[board] = links;
-
-    chrome.storage.sync.set( obj, function() {
-      console.log("Link Saved");
-    });
+    if(links && !links.includes(link)){
+      links.unshift(link);
+      obj[board] = links;
+      chrome.storage.sync.set( obj, function() {
+        let message = document.querySelector('#mainContent');
+        message.innerHTML = "SAVED " + link.split(';')[0];
+      });
+    }
   });
 }
 
