@@ -10,15 +10,7 @@ function runPlugin() {
 
 document.addEventListener('DOMContentLoaded', function() {
   getLinkData(null, function(result) {
-    if(result !== null){
-      document.getElementById("delete_all").addEventListener("click", deleteAll);
-      console.log(document.getElementsByTagName('button'));
-      Object.keys(result).forEach(function(key) {
-        result[key].map(function(item) {
-          let link = item.split(";")[1];
-        });
-      });
-    }
+    document.getElementById("delete_all").addEventListener("click", deleteAll);
   });
 });
 
@@ -33,12 +25,8 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
   showData();
 });
 
-function deleteItem(){
-  alert("DELETE");
-}
-
 function deleteAll(){
-  if (confirm('Are you sure you want to delete all you savings?')) {
+  if(confirm('Are you sure you want to delete all you savings?')) {
     alert("DELETED Everything!");
     let div = document.getElementById('mainContent');
     div.innerHTML = "";
@@ -63,6 +51,45 @@ function convertToList(data) {
     });
     div.innerHTML += "<div class='dropdown'><button class='dropbtn'>" + key.toUpperCase() + "</button><div class='dropdown-content'>" + links + "</div>";
   });
+  addListener();
+}
+
+function addListener(){
+  getLinkData(null, function(result){
+    Object.keys(result).forEach(function(key) {
+      result[key].map(function(item) {
+        let link = item.split(";")[1];
+        document.getElementById(link).addEventListener('click', function(){
+          deleteItem(link);
+        });
+      });
+    });
+  });
+}
+
+
+function deleteItem(link){
+  let board = getBoardName(link);
+  getLinkData(board, function(result){
+    let index = -1;
+    for(let i = 0; i < result[board].length; i++){
+      let foundLink = result[board][i].split(";")[1];
+      if(foundLink === link){
+        index = i;
+        break;
+      }
+    }
+    console.log(index);
+    result[board].splice(index, 1);
+    updateLink(board, result[board]);
+  });
+}
+
+function updateLink(board, newLinks){
+  let obj = {};
+  obj[board] = newLinks;
+  chrome.storage.sync.set(obj);
+  alert("DELETED");
 }
 
 function saveLink(board, link){
@@ -79,10 +106,6 @@ function saveLink(board, link){
     }
     showData();
   });
-}
-
-function updateLink(){
-
 }
 
 function getBoardName(link) {
