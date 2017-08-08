@@ -4,9 +4,6 @@ function addListener(){
       result[key].map(function(item) {
         let link = item.split(";")[1];
         deleteLink(link);
-        //button.addEventListener('click', function(){
-          //deleteItem(link);
-        //});
       });
     });
   });
