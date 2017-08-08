@@ -36,6 +36,8 @@ function deleteAll(){
 
 function showData() {
   getLinkData(null, function(result) {
+    let div = document.getElementById('mainContent');
+    div.innerHTML = "";
     convertToList(result);
   });
 }
@@ -89,7 +91,7 @@ function updateLink(board, newLinks){
   let obj = {};
   obj[board] = newLinks;
   chrome.storage.sync.set(obj);
-  alert("DELETED");
+  showData();
 }
 
 function saveLink(board, link){
