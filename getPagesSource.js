@@ -18,9 +18,9 @@ function findLink(document) {
 }
 
 function findWebLink(document) {
-  if(!document.location.href.includes("https://www.ptt.cc"))
+  if(document.location.origin !== "https://www.ptt.cc")
     return "Not a ptt website";
   let title = document.getElementsByClassName("article-meta-value")[2].innerHTML;
-  let link = document.getElementsByClassName("f2")[1].getElementsByTagName("a")[0].href;
+  let link = document.location.href;
   return [title, link];
 }

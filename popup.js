@@ -88,9 +88,13 @@ function deleteItem(link){
 }
 
 function updateLink(board, newLinks){
-  let obj = {};
-  obj[board] = newLinks;
-  chrome.storage.sync.set(obj);
+  if(newLinks.length == 0){
+    chrome.storage.sync.remove(board);
+  }else{
+    let obj = {};
+    obj[board] = newLinks;
+    chrome.storage.sync.set(obj);
+  }
   showData();
 }
 
@@ -102,7 +106,7 @@ function saveLink(board, link){
       links.unshift(link);
       obj[board] = links;
       chrome.storage.sync.set( obj, function() {
-        let message = document.querySelector('#mainContent');
+        let message = document.querySelector('#message');
         message.innerHTML = "<h3 style=color:red>SAVED " + link.split(';')[0] + "</h3><br/>";
       });
     }
@@ -122,4 +126,5 @@ function getBoardName(link) {
 function getLinkData(board, next) {
   chrome.storage.sync.get(board, next);
 }
+
 window.onload = runPlugin();
