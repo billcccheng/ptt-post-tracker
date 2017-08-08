@@ -1,3 +1,38 @@
+function addListener(){
+  getLinkData(null, function(result){
+    Object.keys(result).forEach(function(key) {
+      result[key].map(function(item) {
+        let link = item.split(";")[1];
+        deleteLink(link);
+        //button.addEventListener('click', function(){
+          //deleteItem(link);
+        //});
+      });
+    });
+  });
+}
+
+function deleteLink(link){
+  let start = 0;
+  let end = 0;
+  let delta = 0;
+  let _link = document.getElementById(link);
+  _link.addEventListener("mousedown", function(e){
+    e.preventDefault();
+    start = new Date();
+  });
+  _link.addEventListener("mouseup", function(e) {
+    e.preventDefault();
+    end = new Date();
+    delta = end - start;
+    if (delta > 1000) {
+      deleteItem(link);
+    }else{
+      window.open(link, '_blank');
+    }
+  });
+}
+
 function deleteAll(){
   if(confirm('Are you sure you want to delete all you savings?')) {
     alert("DELETED Everything!");
@@ -5,6 +40,22 @@ function deleteAll(){
     div.innerHTML = "";
     chrome.storage.sync.clear();
   } 
+}
+
+function saveLink(board, link){
+  getLinkData(board, function(result) {
+    let obj = {};
+    let links = !!result[board] ? result[board] : [];
+    if(links && !links.includes(link)){
+      links.unshift(link);
+      obj[board] = links;
+      chrome.storage.sync.set( obj, function() {
+        let message = document.querySelector('#message');
+        message.innerHTML = "<h3 style=color:red>SAVED " + link.split(';')[0] + "</h3><br/>";
+      });
+    }
+    showData();
+  });
 }
 
 function showData() {
@@ -22,26 +73,12 @@ function convertToList(data) {
     data[key].map(function(item) {
       let title = item.split(";")[0]
       let link = item.split(";")[1]
-      links += "<a href=" + link + " target='_blank'>" + title + "</a><button class='delete' id="+ link +">x</button>";
+      links += "<a href=" + link + " id=" +link+ " >" + title + "</a>";
     });
     div.innerHTML += "<div class='dropdown'><button class='dropbtn'>" + key.toUpperCase() + "</button><div class='dropdown-content'>" + links + "</div>";
   });
   addListener();
 }
-
-function addListener(){
-  getLinkData(null, function(result){
-    Object.keys(result).forEach(function(key) {
-      result[key].map(function(item) {
-        let link = item.split(";")[1];
-        document.getElementById(link).addEventListener('click', function(){
-          deleteItem(link);
-        });
-      });
-    });
-  });
-}
-
 
 function deleteItem(link){
   let board = getBoardName(link);
@@ -69,22 +106,6 @@ function updateLink(board, newLinks){
     chrome.storage.sync.set(obj);
   }
   showData();
-}
-
-function saveLink(board, link){
-  getLinkData(board, function(result) {
-    let obj = {};
-    let links = !!result[board] ? result[board] : [];
-    if(links && !links.includes(link)){
-      links.unshift(link);
-      obj[board] = links;
-      chrome.storage.sync.set( obj, function() {
-        let message = document.querySelector('#message');
-        message.innerHTML = "<h3 style=color:red>SAVED " + link.split(';')[0] + "</h3><br/>";
-      });
-    }
-    showData();
-  });
 }
 
 function getBoardName(link) {

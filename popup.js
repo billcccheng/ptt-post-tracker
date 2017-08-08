@@ -8,12 +8,6 @@ function runPlugin() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  getLinkData(null, function(result) {
-    document.getElementById("delete_all").addEventListener("click", deleteAll);
-  });
-});
-
 chrome.runtime.onMessage.addListener(function(request, sender) {
   if (request.action == "getSource" && request.source !== "Not a ptt website") {
     let title = request.source[0];
@@ -25,5 +19,10 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
   showData();
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+  getLinkData(null, function(result) {
+    document.getElementById("delete_all").addEventListener("click", deleteAll);
+  });
+});
 
 window.onload = runPlugin();
