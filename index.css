@@ -1,6 +1,7 @@
 body {
   background: #FFFFE0;
   font-family: Gill Sans MT;
+  margin: 20px;
 }
 
 #title {
@@ -29,7 +30,7 @@ body {
 
 #trash {
   float: right;
-  display: inline-block;
+  /*display: inline-block;*/
 }
 
 a,a:visited,a:hover,a:active{
@@ -99,7 +100,7 @@ button:active {
 .dropbtn {
   font-size: 12px;
   width: 90%;
-  padding: 15px;
+  padding: 10px;
   margin: 5px;
 }
 
@@ -119,6 +120,7 @@ button:active {
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
   border: solid;
+  margin-bottom: 20px;
 }
 
 /* Links inside the dropdown */

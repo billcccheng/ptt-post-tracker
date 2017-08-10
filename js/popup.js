@@ -25,10 +25,16 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   document.getElementById("trash").addEventListener("drop", function(e){
-    let link = e.dataTransfer.getData("Link");
-    deleteLink(link);
+    let id = e.dataTransfer.getData("id");
+    if(id.includes("https://www.ptt.cc")) 
+      deleteLink(id);
+    else{
+      chrome.storage.sync.remove(id);
+      showData();
+    }
     e.preventDefault();
   });
+
   //Allow Drop
   document.getElementById("trash").addEventListener("dragover", function(e){
     e.preventDefault();

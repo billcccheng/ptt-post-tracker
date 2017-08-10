@@ -9,13 +9,6 @@ function addListener(){
   });
 }
 
-function addMoveToTrashListener(link){
-  let _link = document.getElementById(link);
-  _link.addEventListener("dragstart", function(e){
-    e.dataTransfer.setData("Link", e.target.id);
-  });
-}
-
 function deleteAll(){
     let div = document.getElementById('mainContent');
     div.innerHTML = "";
@@ -32,7 +25,7 @@ function saveLink(board, link){
       obj[board] = links;
       chrome.storage.sync.set( obj, function() {
         let message = document.querySelector('#message');
-        message.innerHTML = "<h3 style=color:red>SAVED " + link.split(';')[0] + "</h3><br/>";
+        message.innerHTML = "<h3 style=color:red>SAVED " +board.toUpperCase()+": "+ link.split(';')[0] + "</h3><br/>";
       });
     }
     showData();
@@ -56,23 +49,51 @@ function convertToList(data) {
       let link = item.split(";")[1]
       links += "<a href=" + link + " id=" +link+ " draggable=true>" + title + "</a>";
     });
-    div.innerHTML += "<div class='dropdown'><button class='dropbtn'>" + key.toUpperCase() + "</button><div class='dropdown-content'>" + links + "</div>";
+    div.innerHTML += "<div class='dropdown'><button draggable=true class='dropbtn' id="+key+">" + key.toUpperCase() + "</button><div class='dropdown-content'>" + links + "</div>";
   });
   addListener();
 }
 
-function deleteLink(link){
-  let board = getBoardName(link);
+function addListener(){
+  getLinkData(null, function(result){
+    Object.keys(result).forEach(function(board) {
+      addMoveBoardToTrashListener(board);
+      result[board].map(function(link) {
+        let _link = link.split(";")[1];
+        addMoveLinkToTrashListener(_link);
+      });
+    });
+  });
+}
+
+function addMoveBoardToTrashListener(link){
+  let _link = document.getElementById(link);
+  _link.addEventListener("dragstart", function(e){
+    e.dataTransfer.setData("id", e.target.id);
+  });
+}
+
+function addMoveLinkToTrashListener(link){
+  let _link = document.getElementById(link);
+  _link.addEventListener("dragstart", function(e){
+    e.dataTransfer.setData("id", e.target.id);
+  });
+  _link.addEventListener("click", function(e){
+    window.open(link, '_blank');
+  });
+}
+
+function deleteLink(item){
+  let board = getBoardName(item);
   getLinkData(board, function(result){
     let index = -1;
     for(let i = 0; i < result[board].length; i++){
       let foundLink = result[board][i].split(";")[1];
-      if(foundLink === link){
+      if(foundLink === item){
         index = i;
         break;
       }
     }
-    console.log(index);
     result[board].splice(index, 1);
     updateLink(board, result[board]);
   });
