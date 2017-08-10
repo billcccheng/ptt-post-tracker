@@ -25,7 +25,7 @@ function saveLink(board, link){
       obj[board] = links;
       chrome.storage.sync.set( obj, function() {
         let message = document.querySelector('#message');
-        message.innerHTML = "<h3 style=color:red>SAVED " +board.toUpperCase()+": "+ link.split(';')[0] + "</h3><br/>";
+        message.innerHTML = "<h3 id='save-message'>SAVED " +board.toUpperCase()+": "+ link.split(';')[0] + "</h3><br/>";
       });
     }
     showData();

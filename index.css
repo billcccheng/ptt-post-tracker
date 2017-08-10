@@ -1,36 +1,45 @@
 body {
   background: #A9A9A9;
   font-family: Gill Sans MT;
-  margin: 20px;
+  width: 400px;
+}
+
+#title-section {
+  background: white;
+  padding: 5px;
+  border-style: solid;
+  border-color: #313131;
+  margin-bottom: 15px;
 }
 
 #title {
   text-align: center;
-  background: white;
-  padding: 10px;
-  border-style: solid;
-  border-color: #313131;
+}
+
+#signature {
+  color: black;
+  font: 10px 'Pacifico';
+  float: right;
+  margin-top: -15px;
 }
 
 #delete_all {
   margin-bottom: 10px;
-  margin-left: 5px;
   padding: 5px;
   color: black;
-  background: #FF0033;
-}
-
-.delete:hover {
-  background: red;
+  background: #DC4C46;
 }
 
 #delete_all:hover {
   color: white;
 }
 
+#save-message {
+  color: #DC4C46; 
+}
+
 #trash {
   float: right;
-  /*display: inline-block;*/
 }
 
 a,a:visited,a:hover,a:active{
@@ -87,7 +96,7 @@ button:hover {
   font-size: 12px;
   width: 90%;
   padding: 10px;
-  margin: 5px;
+  margin-bottom: 5px;
   background-color: #efefef;
 }
 
@@ -107,7 +116,7 @@ button:hover {
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
   border: solid;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 /* Links inside the dropdown */
