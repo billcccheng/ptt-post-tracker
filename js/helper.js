@@ -3,40 +3,24 @@ function addListener(){
     Object.keys(result).forEach(function(key) {
       result[key].map(function(item) {
         let link = item.split(";")[1];
-        deleteLink(link);
+        addMoveToTrashListener(link);
       });
     });
   });
 }
 
-function deleteLink(link){
-  let start = 0;
-  let end = 0;
-  let delta = 0;
+function addMoveToTrashListener(link){
   let _link = document.getElementById(link);
-  _link.addEventListener("mousedown", function(e){
-    e.preventDefault();
-    start = new Date();
-  });
-  _link.addEventListener("mouseup", function(e) {
-    e.preventDefault();
-    end = new Date();
-    delta = end - start;
-    if (delta > 1000) {
-      deleteItem(link);
-    }else{
-      window.open(link, '_blank');
-    }
+  _link.addEventListener("dragstart", function(e){
+    e.dataTransfer.setData("Link", e.target.id);
   });
 }
 
 function deleteAll(){
-  if(confirm('Are you sure you want to delete all you savings?')) {
-    alert("DELETED Everything!");
     let div = document.getElementById('mainContent');
     div.innerHTML = "";
     chrome.storage.sync.clear();
-  } 
+    alert("DELETED Everything!");
 }
 
 function saveLink(board, link){
@@ -70,14 +54,14 @@ function convertToList(data) {
     data[key].map(function(item) {
       let title = item.split(";")[0]
       let link = item.split(";")[1]
-      links += "<a href=" + link + " id=" +link+ " >" + title + "</a>";
+      links += "<a href=" + link + " id=" +link+ " draggable=true>" + title + "</a>";
     });
     div.innerHTML += "<div class='dropdown'><button class='dropbtn'>" + key.toUpperCase() + "</button><div class='dropdown-content'>" + links + "</div>";
   });
   addListener();
 }
 
-function deleteItem(link){
+function deleteLink(link){
   let board = getBoardName(link);
   getLinkData(board, function(result){
     let index = -1;

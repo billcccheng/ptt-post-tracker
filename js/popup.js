@@ -23,6 +23,16 @@ document.addEventListener('DOMContentLoaded', function() {
   getLinkData(null, function(result) {
     document.getElementById("delete_all").addEventListener("click", deleteAll);
   });
+
+  document.getElementById("trash").addEventListener("drop", function(e){
+    let link = e.dataTransfer.getData("Link");
+    deleteLink(link);
+    e.preventDefault();
+  });
+  //Allow Drop
+  document.getElementById("trash").addEventListener("dragover", function(e){
+    e.preventDefault();
+  });
 });
 
 window.onload = runPlugin();

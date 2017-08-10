@@ -12,7 +12,8 @@ body {
 }
 
 #delete_all {
-  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 5px;
   padding: 5px;
   color: black;
   background:red;
@@ -24,6 +25,11 @@ body {
 
 #delete_all:hover {
   color: white;
+}
+
+#trash {
+  float: right;
+  display: inline-block;
 }
 
 a,a:visited,a:hover,a:active{
