@@ -1,5 +1,5 @@
 # PTT Post Tracker
-This app is an Chrome Extension which can save PTT web links and categorize them through different boards.
+This app is an Chrome Extension which can save PTT web links and categorize them through different boards. Here is the link:
 [Chrome Extension Link](https://chrome.google.com/webstore/detail/ptt-post-tracker/ihcmngdlcfbbafonopkihniggbfopegk/related)
 
 ## How to Use it
